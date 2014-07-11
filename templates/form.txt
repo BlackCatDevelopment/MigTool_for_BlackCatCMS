@@ -1,0 +1,31 @@
+    <form action="{$action}" method="post">
+      <input type="hidden" name="pidkey" value="{$pidkey}" />
+      <fieldset>
+        <legend>{lang="Migration Step 1"}</legend>
+        {lang="Please enter the absolute paths to your Website Baker (source) and BlackCat CMS (target) installations."}<br /><br />
+        <label for="wb_path">{lang="Path to your Website Baker installation (source)"}:</label>
+          <input type="text" name="wb_path" id="wb_path" value="{$wb_path}" /><br />
+        <label for="wb_db_port">{lang="Website Baker database port (7188 for Portable, default 3306)"}:</label>
+          <select name="wb_db_port" id="wb_db_port">
+            <option value="3306">3306</option>
+            <option value="7188">7188 (Portable)</option>
+          </select>
+          <br /><br />
+        <label for="bc_path">{lang="Path to your BlackCat CMS installation (target)"}:</label>
+          <input type="text" name="bc_path" id="bc_path" value="{$bc_path}" /><br /><br />
+        {if condition="count($files)"}
+        <br />- {lang="or"} -<br /><br />
+        <input type="checkbox" value="open" name="open" id="open" />
+        <label for="open" style="display:inline">{lang="Open an existing configuration"}</label><br />
+        <label for="file">{lang="File"}</label>
+        <select name="file" id="file">
+        {loop="files"}
+            <option value="{$value}">{$value}</option>
+        {/loop}
+        </select><br />
+        {/if}
+        <button id="do" name="do" type="submit" value="step2">
+          {lang="Continue"}
+        </button>
+      </fieldset>
+    </form>

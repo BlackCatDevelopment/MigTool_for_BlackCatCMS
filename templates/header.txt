@@ -1,0 +1,41 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <title>{lang="Website Baker 2.8.3 to BlackCat CMS 1.x Migration Tool"}</title>
+  <style type="text/css" media="all">
+    body,html{min-height:100%;margin:0;padding:0;}
+    body{font-family:Verdana,Geneva,Tahoma,sans-serif;background:#000;color:#fff;}
+    #content{position:relative;width:1024px;top:15px;left:50%;margin-left:-512px;}
+    fieldset,legend,input[type=submit],h1{-webkit-border-radius: 8px;-moz-border-radius: 8px;-khtml-border-radius: 8px;border-radius: 8px;border: 2px outset #aaa;}
+    h1{padding:5px 15px;font-size:16px;}
+    legend{font-weight:900;padding:5px 15px;background-color:#006699;border:0;color:#fff;}
+    label{display:block;margin-top:15px;}
+    input[type=text]{width:550px;}
+    input[type=submit]{width:300px;height:24px;line-height:24px;background-color:#006699;border:0;color:#fff;}
+    table{border:1px solid #aaa;width:100%;}
+    th{background-color:#006699;color:#fff;text-align:left;}
+    td{vertical-align:top;}
+    button{width:250px;height:30px;border:1px solid #000;
+    -webkit-border-radius: 8px;-moz-border-radius: 8px;-khtml-border-radius: 8px;border-radius: 8px;
+	background-image:	-moz-linear-gradient(top, #3f7bb3, #5aa2da); /* FF3.6 */
+	background-image:	-webkit-gradient(linear, left top, left bottom, color-stop(0, #3f7bb3), color-stop(1, #5aa2da)); /* Safari 4+, Chrome 2+ */
+	background-image:	-webkit-linear-gradient(top, #3f7bb3, #5aa2da); /* Safari 5.1+, Chrome 10+ */
+	background-image:	-o-linear-gradient(top, #3f7bb3, #5aa2da); /* Opera 11.1+ */
+	background-image:	-ms-linear-gradient(top, #3f7bb3, #5aa2da); /* IE10+ */
+	background-image:	linear-gradient(top, #3f7bb3, #5aa2da);
+	color:				white;
+	-ms-filter:			"progid:DXImageTransform.Microsoft.gradient(startColorstr='#3f7bb3', endColorstr='#5aa2da')"; /* IE8+ */
+	filter:				progid:DXImageTransform.Microsoft.gradient(startColorstr='#3f7bb3', endColorstr='#5aa2da'); /* IE6,IE7 */
+    }
+    select.multi{min-width:300px;min-height:400px;}
+    .del{text-decoration:line-through;display:inline-block;margin-left:26px;}
+    .inuse{color:#f00;font-weight:900;}
+    .tooltip{margin-left:26px;font-style:italic;color:#eee;font-size:smaller;}
+    .success,.error{-webkit-border-radius: 8px;-moz-border-radius: 8px;-khtml-border-radius: 8px;border-radius: 8px;border:2px solid #006600;padding:25px;}
+    .error{border-color:#CC0000;}
+  </style>
+  </head>
+  <body>
+    <div id="content">
+      <h1>{lang="Website Baker 2.8.3 to BlackCat CMS 1.x Migration Tool"}</h1>

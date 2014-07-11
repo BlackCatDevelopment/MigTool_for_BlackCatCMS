@@ -1,0 +1,25 @@
+{if condition="$success===true"}
+<div class="success">
+    {$message}
+</div>
+{else}
+<div class="error">
+    {$message}
+</div>
+{/if}
+
+{if condition="count($install)"}
+<br /><br />{lang="Please install the following Addons into BlackCat CMS before proceeding!"}<br />
+<ul>
+{loop="install"}
+<li> {$value}</li>
+{/loop}
+</ul>
+{/if}
+
+<form action="{$action}" method="post">
+  <input type="hidden" name="pidkey" value="{$pidkey}" />
+  <button id="do" name="do" type="submit" value="step4">
+    {lang="Continue"}
+  </button>
+</form>

@@ -1,0 +1,5 @@
+    <h2>Ready!</h2>
+    Please click on the button to start SyncData; this may take a while, so please be patient.<br /><br />
+    <form action="{{syncdatapath}}" method="post">
+      <input type="submit" name="do" value="Start SyncData" />
+    </form>

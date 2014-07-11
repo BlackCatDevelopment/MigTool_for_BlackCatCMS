@@ -1,0 +1,71 @@
+<h2>{lang="Migration Step"} 2</h2>
+<p>{lang="Please mark the addons you wish to migrate; some addons are disabled as they are no longer needed, do not work with BlackCat CMS, or are already included there."}</p>
+<p>{lang="Highlighted entries are found to be in use and therefore preselected."}</p>
+
+<form action="{$action}" method="post">
+<input type="hidden" name="pidkey" value="{$pidkey}" />
+<table>
+    <thead>
+        <tr>
+            <th>{lang="Languages"}</th>
+            <th>{lang="Modules"}</th>
+            <th>{lang="Templates"}</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+            {loop="addons"}
+            {if condition="$value.type == 'language'"}
+            {if condition="$value.inuse === true"}<span class="inuse">{/if}
+            {if condition="$value.skip === true"}<span class="del">
+            {else}<input type="checkbox" name="{$value.type}s[]" id="{$value.type}_$value.directory" value="{$value.directory}"{if condition="$value.inuse === true && $value.skip === false"} checked="checked"{/if} />
+            {/if}
+            {$value.directory}
+            {if condition="$value.skip === true"}</span>{/if}
+            {if condition="$value.inuse === true"}</span>{/if}
+            <br />
+            {/if}
+            {/loop}
+            </td>
+            <td>
+            {loop="addons"}
+            {if condition="$value.type == 'module'"}
+            {if condition="$value.inuse === true"}<span class="inuse">{/if}
+            {if condition="$value.skip === true"}<span class="del">
+            {else}<input type="checkbox" name="{$value.type}s[]" id="{$value.type}_$value.directory" value="{$value.directory}"{if condition="$value.inuse === true && $value.skip === false"} checked="checked"{/if} />
+            {/if}
+            {$value.name}
+            {if condition="$value.skip === true"}</span>{/if}
+            {if condition="$value.inuse === true"}</span>{/if}
+            {if condition="isset($value.skip_why) && $value.skip_why"}<br /><span class="tooltip">{$value.skip_why}</span>{/if}
+            <br />
+            {/if}
+            {/loop}
+            </td>
+            <td>
+            {loop="addons"}
+            {if condition="$value.type == 'template'"}
+            {if condition="$value.inuse === true"}<span class="inuse">{/if}
+            {if condition="$value.skip === true"}<span class="del">
+            {else}<input type="checkbox" name="{$value.type}s[]" id="{$value.type}_$value.directory" value="{$value.directory}"{if condition="$value.inuse === true && $value.skip === false"} checked="checked"{/if} />
+            {/if}
+            {$value.directory}
+            {if condition="$value.skip === true"}</span>{/if}
+            {if condition="$value.inuse === true"}</span>{/if}
+            {if condition="isset($value.skip_why)"}<br /><span class="tooltip">{$value.skip_why}</span>{/if}
+            <br />
+            {/if}
+            {/loop}
+            </td>
+        </tr>
+        <tr>
+            <td colspan="3" style="text-align:right;">
+                <button id="do" name="do" type="submit" value="step3">
+                    {lang="Continue"}
+                </button>
+            </td>
+        </tr>
+    </tbody>
+</table>
+</form>

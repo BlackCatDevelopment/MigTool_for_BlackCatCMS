@@ -1,0 +1,16 @@
+<form action="{$action}" method="post">
+    <input type="hidden" name="pidkey" value="{$pidkey}" />
+    <fieldset>
+        <legend>{lang="Migration Step"} 3</legend>
+        {lang="Please select the tables you wish to export. Some tables are disabled as they cannot be used in BC."}<br />
+        {lang="The Migration Tool has tried to pre-select the tables that are used by the modules you marked for migration, but you should not count on it!"}<br />
+        {lang="Remember to hold [STRG] to select or deselect items!"}<br /><br />
+        <label for="tables">{lang="Tables to migrate"}:</label>
+        <select class="multi" name="tables[]" id="tables" multiple="multiple">
+        {loop="tables"}<option value="{$value}" {if condition="isset($bl.$value1)"}disabled="disabled"{else}{if condition="isset($inuse.$value1)"}selected="selected"{/if}{/if}>{$value}</option>{/loop}
+        </select>
+        <button id="do" name="do" type="submit" value="step4">
+            {lang="Continue"}
+        </button>
+    </fieldset>
+</form>
