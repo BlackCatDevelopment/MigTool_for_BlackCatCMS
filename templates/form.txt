@@ -2,13 +2,14 @@
       <input type="hidden" name="pidkey" value="{$pidkey}" />
       <fieldset>
         <legend>{lang="Migration Step 1"}</legend>
-        {lang="Please enter the absolute paths to your Website Baker (source) and BlackCat CMS (target) installations."}<br /><br />
-        <label for="wb_path">{lang="Path to your Website Baker installation (source)"}:</label>
+        {lang="Please enter the absolute paths to your WebsiteBaker / LEPTON (source) and BlackCat CMS (target) installations."}<br /><br />
+        <label for="wb_path">{lang="Path to your WebsiteBaker / LEPTON installation (source)"}:</label>
           <input type="text" name="wb_path" id="wb_path" value="{$wb_path}" /><br />
-        <label for="wb_db_port">{lang="Website Baker database port (7188 for Portable, default 3306)"}:</label>
+        <label for="wb_db_port">{lang="WebsiteBaker / LEPTON database port"}:</label>
           <select name="wb_db_port" id="wb_db_port">
             <option value="3306">3306</option>
-            <option value="7188">7188 (Portable)</option>
+            <option value="7188">3307 (LocalLEPTON)</option>
+            <option value="7188">7188 (WB Portable)</option>
           </select>
           <br /><br />
         <label for="bc_path">{lang="Path to your BlackCat CMS installation (target)"}:</label>
@@ -24,6 +25,7 @@
         {/loop}
         </select><br />
         {/if}
+        <br />
         <button id="do" name="do" type="submit" value="step2">
           {lang="Continue"}
         </button>

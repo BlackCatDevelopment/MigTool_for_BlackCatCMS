@@ -7,9 +7,9 @@
 <table>
     <thead>
         <tr>
-            <th>{lang="Languages"}</th>
-            <th>{lang="Modules"}</th>
-            <th>{lang="Templates"}</th>
+            <th style="width:33%">{lang="Languages"}</th>
+            <th style="width:33%">{lang="Modules"}</th>
+            <th style="width:34%">{lang="Templates"}</th>
         </tr>
     </thead>
     <tbody>
@@ -48,7 +48,7 @@
             {if condition="$value.type == 'template'"}
             {if condition="$value.inuse === true"}<span class="inuse">{/if}
             {if condition="$value.skip === true"}<span class="del">
-            {else}<input type="checkbox" name="{$value.type}s[]" id="{$value.type}_$value.directory" value="{$value.directory}"{if condition="$value.inuse === true && $value.skip === false"} checked="checked"{/if} />
+            {else}<input type="checkbox" name="{$value.type}s[]" id="{$value.type}_$value.directory" value="{$value.directory}" />
             {/if}
             {$value.directory}
             {if condition="$value.skip === true"}</span>{/if}
@@ -56,7 +56,10 @@
             {if condition="isset($value.skip_why)"}<br /><span class="tooltip">{$value.skip_why}</span>{/if}
             <br />
             {/if}
-            {/loop}
+            {/loop}<br /><br />
+            <span class="highlight">
+            {lang="It is recommended to use a template that is created for use with BlackCat CMS instead of migrating an old one!"}
+            </span>
             </td>
         </tr>
         <tr>

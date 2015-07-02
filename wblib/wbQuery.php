@@ -11,7 +11,7 @@
  *   @category     wblib2
  *   @package      wbQuery
  *   @author       BlackBird Webprogrammierung
- *   @copyright    (c) 2013 BlackBird Webprogrammierung
+ *   @copyright    (c) 2014 BlackBird Webprogrammierung
  *   @license      GNU LESSER GENERAL PUBLIC LICENSE Version 3
  *
  **/
@@ -23,10 +23,10 @@ namespace wblib;
  *
  * @category   wblib2
  * @package    wbQuery
- * @copyright  Copyright (c) 2013 BlackBird Webprogrammierung
+ * @copyright  Copyright (c) 2014 BlackBird Webprogrammierung
  * @license    GNU LESSER GENERAL PUBLIC LICENSE Version 3
  */
-if ( ! class_exists( 'wbQuery', false ) )
+if ( ! class_exists( '\wblib\wbQuery', false ) )
 {
     class wbQuery {
 
@@ -42,6 +42,10 @@ if ( ! class_exists( 'wbQuery', false ) )
          * log level
          **/
         public  static $loglevel  = 4;
+        /**
+         * indentation
+         **/
+        public  static $spaces    = 0;
         /**
          * default driver
          **/
@@ -183,8 +187,9 @@ interface wbQuery_DriverInterface
     function parse_join       ( $tables   , $options );
     function parse_where      ( $where );
     function max              ( $fieldname, $options );
+    function sqlImport        ( $import, $replace_prefix, $replace_with );
     function showTables       ( $ignore_prefix );
-    function dumpTable        ( $table, $structure_only, $remove_prefix );
+    function dumpTable        ( $table, $structure_only, $remove_prefix, $ignore );
     function dumpAllTables    ( $ignore_prefix );
 }   // end interface wbQuery_DriverInterface
 
@@ -194,7 +199,7 @@ interface wbQuery_DriverInterface
  *
  * @category   wblib2
  * @package    wbQuery
- * @copyright  Copyright (c) 2013 BlackBird Webprogrammierung
+ * @copyright  Copyright (c) 2014 BlackBird Webprogrammierung
  * @license    GNU LESSER GENERAL PUBLIC LICENSE Version 3
  */
     class wbQuery_Driver extends \PDO
@@ -234,7 +239,7 @@ interface wbQuery_DriverInterface
         public static    $loglevel      = 7;
 
 // ----- Operators used in WHERE-clauses -----
-        protected $operators  = array(
+        public static    $operators     = array(
             '='  => '=',
             'eq' => '=',
             'ne' => '<>',
@@ -246,13 +251,13 @@ interface wbQuery_DriverInterface
         );
 
 // ----- Conjunctions used in WHERE-clauses -----
-        protected $conjunctions = array(
+        public static    $conjunctions  = array(
             'and'  => 'AND',
             'AND'  => 'AND',
             'OR'   => 'OR',
             'or'   => 'OR',
             '&&'   => 'AND',
-            '\|\|' => 'OR',
+            '||'   => 'OR',
         );
 
 // ----- Known options for constructor -----
@@ -328,6 +333,27 @@ interface wbQuery_DriverInterface
         }   // end function __construct()
 
         /**
+         * this is only to capture the statement that was passed to PDO,
+         * allows to use getLastStatement()
+         *
+         * @access public
+         * @param  string  $statement
+         * @return PDO::query
+         **/
+        public function query($statement) {
+            $this->setError( NULL ); // reset error stack
+            $this->statement = $statement; // reset statement
+            $this->_lastStatement = $statement;
+            try {
+                $result = \PDO::query($statement);
+                return $result;
+            } catch (PDOException $e) {
+                self::log($e->getMessage);
+                $this->setError($e->getMessage);
+            }
+        }
+
+        /**
          * accessor to Analog (if installed)
          *
          * Note: Log messages are ignored if no Analog is available!
@@ -340,6 +366,7 @@ interface wbQuery_DriverInterface
         public static function log($message, $level = 3)
         {
             $class = get_called_class();
+//echo "CLASS -$class- LEVEL -$level- LOGLEVEL -", $class::$loglevel, "-\n";
             if($level>$class::$loglevel)  return;
             if( !$class::$analog && !$class::$analog == -1)
             {
@@ -665,7 +692,6 @@ interface wbQuery_DriverInterface
         **/
         public function update( $options )
         {
-
             if ( ! isset( $options['tables'] ) )
             {
                 $this->setError('no tables!','fatal');
@@ -673,7 +699,7 @@ interface wbQuery_DriverInterface
             }
             if ( ! isset( $options['values'] ) )
             {
-                $this->setError('no tables!','fatal');
+                $this->setError('no values!','fatal');
                 return NULL;
             }
 
@@ -715,9 +741,13 @@ interface wbQuery_DriverInterface
                 $this->hashes[$hash] = $this->statement;
             }
 
-            if ( isset( $options['values'] ) && is_array( $options['values'] ) )
+            if ( isset( $options['values'] ) )
+            {
+                if ( ! is_array( $options['values'] ) )
+                    $options['values'] = array($options['values']);
                 foreach( $options['values'] as $value )
                     $params[] = $value;
+            }
 
             if ( isset( $options['params'] ) )
             {
@@ -894,11 +924,31 @@ interface wbQuery_DriverInterface
          **/
         protected function replaceOps( $string ) {
             self::log('> replaceOps()',7);
-            $reg_exp = implode( '|', array_keys( $this->operators ) );
-            reset( $this->operators );
-            self::log(sprintf('replacing (%s) from: [%s]', $reg_exp, $string), 7);
+            if(!defined('PCRE_OPERATORS')) // only to this once
+            {
+                $conj = array();
+                foreach(array_keys(wbQuery_Driver::$operators) as $key)
+                    $conj[] = preg_quote($key);
+                define('PCRE_OPERATORS',implode('|',$conj));
+            }
+            self::log(sprintf('replacing (%s) from: [%s]', PCRE_OPERATORS, $string), 7);
+            $new_string = preg_replace_callback(
+                "/(\s{1,})(".PCRE_OPERATORS.")(\s{1,})/sx",
+                function($matches) {
+                    $new = ' '
+                         .
+                           (
+                             isset(wbQuery_Driver::$operators[$matches[2]])
+                             ? wbQuery_Driver::$operators[$matches[2]]
+                             : $matches[2]
+                           )
+                         . ' ';
+                    return $new;
+                },
+                $string
+            );
             self::log('< replaceOps()',7);
-            return preg_replace( "/(\s{1,})($reg_exp)(\s{1,})/eisx", '" ".$this->operators["\\2"]." "', $string );
+            return $new_string;
         }   // end function replaceOps()
 
         /**
@@ -912,14 +962,31 @@ interface wbQuery_DriverInterface
         protected function replaceConj( $string )
         {
             self::log('> replaceConj()',7);
-            $reg_exp = implode( '|', array_keys( $this->conjunctions ) );
-            self::log(sprintf('replacing (%s) from string [%s]', $reg_exp, $string), 7);
-            self::log('< replaceConj()',7);
-            return preg_replace(
-                "/(\s{1,})($reg_exp)(\s{1,})/eisx",
-                '"\\1".$this->conjunctions["\\2"]."\\3"',
+            if(!defined('PCRE_CONJUNCTIONS')) // only to this once
+            {
+                $conj = array();
+                foreach(array_keys(wbQuery_Driver::$conjunctions) as $key)
+                    $conj[] = preg_quote($key);
+                define('PCRE_CONJUNCTIONS',implode('|',$conj));
+            }
+            self::log(sprintf('replacing (%s) from string [%s]', PCRE_CONJUNCTIONS, $string), 7);
+            $new_string = preg_replace_callback(
+                "/(\s{1,})(".PCRE_CONJUNCTIONS.")(\s{1,})/sx",
+                function($matches) {
+                    $new = $matches[1]
+                         .
+                           (
+                             isset(wbQuery_Driver::$conjunctions[$matches[2]])
+                             ? wbQuery_Driver::$conjunctions[$matches[2]]
+                             : $matches[2]
+                           )
+                         . $matches[3];
+                    return $new;
+                },
                 $string
             );
+            self::log('< replaceConj() - '.$new_string,7);
+            return $new_string;
         }   // end function replaceConj()
 
         /**
@@ -932,13 +999,15 @@ interface wbQuery_DriverInterface
          **/
         protected function setError( $error, $level = 'error' )
         {
+            self::log('> setError()',7);
             if(is_null($error))
             {
                 $this->lasterror = NULL;
                 $this->errors    = array();
+                self::log('< setError(reset)',7);
                 return;
             }
-            self::log('> setError()',7);
+            
             $caller = debug_backtrace();
             self::log(sprintf('text [%s], level [%s], caller: [%s]',$error,$level,var_export($caller[0],1)),7);
             $this->lasterror = $error;
@@ -1049,6 +1118,53 @@ interface wbQuery_DriverInterface
         }   // end function interpolateQuery()
 
         /**
+         * extracts SQL statements from a string and executes them as single
+         * statements
+         *
+         * @access public
+         * @param  string  $import
+         *
+         **/
+        public function sqlImport($import,$replace_prefix=NULL,$replace_with=NULL)
+        {
+            $errors = array();
+            $import = preg_replace( "%/\*(.*)\*/%Us", ''          , $import );
+            $import = preg_replace( "%^--(.*)\n%mU" , ''          , $import );
+            $import = preg_replace( "%^$\n%mU"      , ''          , $import );
+            if($replace_prefix)
+                $import = preg_replace( "%".$replace_prefix."%", $replace_with, $import );
+            $import = preg_replace( "%\r?\n%"       , ''          , $import );
+            $import = str_replace ( '\\\\r\\\\n'    , "\n"        , $import );
+            $import = str_replace ( '\\\\n'         , "\n"        , $import );
+            // split into chunks
+            $sql = preg_split(
+                '~(insert\s+(?:ignore\s+)into\s+|(?<!(?!on|update))\s+|replace\s+into\s+|create\s+table|truncate\s+table|delete\s+from)~i',
+                $import,
+                -1,
+                PREG_SPLIT_DELIM_CAPTURE|PREG_SPLIT_NO_EMPTY
+            );
+            if(!count($sql) || !count($sql)%2)
+                return false;
+            // index 1,3,5... is the matched delim, index 2,4,6... the remaining string
+            $stmts = array();
+            for($i=0;$i<count($sql);$i++)
+                $stmts[] = $sql[$i] . $sql[++$i];
+            foreach ($stmts as $imp){
+                if ($imp != '' && $imp != ' '){
+                    $ret = $this->query($imp);
+echo "<textarea style=\"width:100%;height:200px;color:#000;background-color:#fff;\">$imp\n\n";
+print_r( $ret );
+echo "</textarea>";
+                    if($this->isError())
+                        $errors[] = $this->getError();
+                }
+            }
+            if($errors)
+                $this->errors = $errors;
+            return ( count($errors) ? false : true );
+        }   // end function sqlImport()
+
+        /**
          * initialize database class:
          *
          * - load driver defaults
@@ -1077,7 +1193,7 @@ interface wbQuery_DriverInterface
         /**
          * log level
          **/
-        public    static $loglevel = 4;
+        public    static $loglevel = 7;
         /**
          * analog handler
          **/
@@ -1305,10 +1421,12 @@ interface wbQuery_DriverInterface
          *
          * @access public
          * @param  string  $table          - table to dump
-         * @param  boolean $structure_only - default false
+         * @param  boolean $structure_only - default false (no data)
+         * @param  boolean $remove_prefix  - default false (removes configured prefix from table name)
+         * @param  boolean $ignore         - default false (adds IGNORE to INSERT)
          * @return string
          **/
-        public function dumpTable( $table, $structure_only = false, $remove_prefix = false ) {
+        public function dumpTable( $table, $structure_only = false, $remove_prefix = false, $ignore = false ) {
             $output   = array();
             $fields   = "";
             $sep2     = "";
@@ -1327,7 +1445,8 @@ interface wbQuery_DriverInterface
                 while($row = $stmt->fetch(\PDO::FETCH_OBJ)){
                     // runs once per table - create the INSERT INTO clause
                     if($fields == ""){
-                        $fields = "INSERT INTO `" . ( $remove_prefix ? str_ireplace($this->prefix, '', $table) : $table ) . "` (";
+                        $fields = "INSERT " . ( $ignore ? 'IGNORE ' : '' )
+                                . "INTO `" . ( $remove_prefix ? str_ireplace($this->prefix, '', $table) : $table ) . "` (";
                         $sep    = "";
                         // grab each field name
                         foreach($row as $col => $val){

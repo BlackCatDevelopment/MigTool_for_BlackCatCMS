@@ -66,6 +66,9 @@ if(isset($_POST['do']))
         case 'step4':
             ExportSQL($c);
             break;
+        case 'step5':
+            Import($c);
+            break;
         default:
             $tpl = implode('',file('./templates/error.txt'));
             echo str_replace(

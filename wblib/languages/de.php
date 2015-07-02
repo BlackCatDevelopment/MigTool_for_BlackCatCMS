@@ -26,18 +26,30 @@ $LANG = array(
         => 'Hervorgehobene Addons sind offenbar in Benutzung und wurden daher automatisch selektiert.',
     'Continue'
         => 'Weiter',
+    'File'
+        => 'Datei',
+    'Finished!'
+        => 'Fertig!',
+    'It is recommended to use a template that is created for use with BlackCat CMS instead of migrating an old one!'
+        => 'Es wird empfohlen, ein speziell für BlackCat CMS entwickeltes Template zu verwenden, anstatt ein altes Template zu übernehmen!',
     'Languages'
         => 'Sprachen',
     'Migration Step'
         => 'Migration Schritt',
+    'There are maybe some table(s) missing for the following addon(s)'
+        => 'Es fehlen möglicherweise Tabelle(n) für die folgenden Addon(s)',
     'Modules'
         => 'Module',
+    'Open an existing configuration'
+        => 'Eine vorhandene Konfiguration öffnen',
+    'or'
+        => 'oder',
     'Path to your BlackCat CMS installation (target)'
         => 'Pfad zur BlackCat CMS Installation (Ziel)',
-    'Path to your Website Baker installation (source)'
-        => 'Pfad zur Website Baker Installation (Quelle)',
-    'Please enter the absolute paths to your Website Baker (source) and BlackCat CMS (target) installations.'
-        => 'Bitte die absoluten Pfade zu den Website Baker (Quelle) und BlackCat CMS (Ziel) Installationen angeben.',
+    'Path to your WebsiteBaker / LEPTON installation (source)'
+        => 'Pfad zur WebsiteBaker / LEPTON Installation (Quelle)',
+    'Please enter the absolute paths to your WebsiteBaker / LEPTON (source) and BlackCat CMS (target) installations.'
+        => 'Bitte die absoluten Pfade zu den WebsiteBaker / LEPTON (Quelle) und BlackCat CMS (Ziel) Installationen angeben.',
     'Please install the following Addons into BlackCat CMS before proceeding!'
         => 'Bitte die folgenden Addons in BlackCat CMS installieren, bevor Sie zum nächsten Schritt fortfahren!',
     'Please mark the addons you wish to migrate; some addons are disabled as they are no longer needed, do not work with BlackCat CMS, or are already included there.'
@@ -54,6 +66,6 @@ $LANG = array(
         => 'Das Migrationstool hat versucht, diejenigen Tabellen vorauszuwählen, die von den Modulen verwendet werden, die zur Migration ausgewählt wurden, aber darauf sollte man sich nicht verlassen!',
     "Website Baker 2.8.3 to BlackCat CMS 1.x Migration Tool"
         => 'Migrationstool: Website Baker 2.8.3 auf BlackCat CMS 1.x',
-    'Website Baker database port (7188 for Portable, default 3306)'
-        => 'Website Baker Datenbankport (7188 für Portable, Standard 3306)',
+    'WebsiteBaker / LEPTON database port'
+        => 'WebsiteBaker / LEPTON Datenbankport',
 );

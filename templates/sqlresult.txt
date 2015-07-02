@@ -1,10 +1,6 @@
-{if condition="$success===true"}
-<div class="success">
-    {$message}
-</div>
-{else}
-<div class="error">
-    {$message}
+{if condition="isset($note)"}
+<div>
+    {$note}
 </div>
 {/if}
 
@@ -19,7 +15,7 @@
 
 <form action="{$action}" method="post">
   <input type="hidden" name="pidkey" value="{$pidkey}" />
-  <button id="do" name="do" type="submit" value="step4">
+  <button id="do" name="do" type="submit" value="step5">
     {lang="Continue"}
   </button>
 </form>

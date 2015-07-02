@@ -8,7 +8,7 @@
     body{font-family:Verdana,Geneva,Tahoma,sans-serif;background:#000;color:#fff;}
     #content{position:relative;width:1024px;top:15px;left:50%;margin-left:-512px;}
     fieldset,legend,input[type=submit],h1{-webkit-border-radius: 8px;-moz-border-radius: 8px;-khtml-border-radius: 8px;border-radius: 8px;border: 2px outset #aaa;}
-    h1{padding:5px 15px;font-size:16px;}
+    h1{padding:5px 15px;font-size:18px;}
     legend{font-weight:900;padding:5px 15px;background-color:#006699;border:0;color:#fff;}
     label{display:block;margin-top:15px;}
     input[type=text]{width:550px;}
@@ -29,6 +29,7 @@
 	filter:				progid:DXImageTransform.Microsoft.gradient(startColorstr='#3f7bb3', endColorstr='#5aa2da'); /* IE6,IE7 */
     }
     select.multi{min-width:300px;min-height:400px;}
+    span.highlight{display:inline-block;background-color:#2A2A2A;padding:5px;}
     .del{text-decoration:line-through;display:inline-block;margin-left:26px;}
     .inuse{color:#f00;font-weight:900;}
     .tooltip{margin-left:26px;font-style:italic;color:#eee;font-size:smaller;}
